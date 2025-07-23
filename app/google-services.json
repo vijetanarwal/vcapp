@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "993354746464",
+    "project_id": "videocallapp-cebfd",
+    "storage_bucket": "videocallapp-cebfd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993354746464:android:9a33340f39ff04e8f09105",
+        "android_client_info": {
+          "package_name": "com.example.videoCallApp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIvZn6W36kuACKLYQpym_HPBv71yzQtys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993354746464:android:140d8f08df107313f09105",
+        "android_client_info": {
+          "package_name": "com.example.videocallapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIvZn6W36kuACKLYQpym_HPBv71yzQtys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
