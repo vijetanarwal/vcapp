@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,9 +37,45 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        permissionHandling(this)
     }
 }
 
+fun initZegoInviteService(appId:Long,appSign:String,userId:String,userName:String){
+    val callInvitationConfig = ZegoKitPrebuiltCallInvitationConfig()
+    callInvitationConfig.translationText = ZegoTranslationText(ZegoUiKitLanguage.ENGLISH)
+    callInvitationConfig.provider = LegoKitPrebuiltCallConfigProvider {invitationData : ZegoCallInvitationData? ->
+        ZegoUIKitPrebuiltCallInvitationConfig.generateDefaultCoonfig(
+            invitationData
+        )
+    }
+    ZegoUIKitPrebuiltCallService.events.errorEventsListener =
+        ErrorEventsListener{ errorCode: Int,meesage:String ->
+            Timber.d("onError() called with: errorCode = [$errorCode], message = [$message]")
+        }
+    ZegoUIKitPrebuiltCallService.events.invitationEvents.pluginConnectListener =
+        signalPluginConnectListener{ state: ZIMConnectionState, event: ZIMConnectionEvent, extendedData: JSONObject ->
+            Timber.d("onSignalPluginConnectionStateChanged() called with: state = [$state],event = [$event],extendedData = [$extendedData$]")
+        }
+    ZegoUIKitPrebuiltCallService.init(
+        application,appID,appSign,userID,userName,callInvitationConfig
+    )
+    ZegouIKitPrebuiltCallService.events.callEvents.callEndListener =
+        callEndListener{ callEndReason, jsonObject ->}{ callEndReason: ZegoCallEndReason, jsonObject: String ->
+            Timber.d("onCallEnd() called with: callEndReason = [$callEndReason] , jsonObject = [$jsonObject]")
+        }
+}
+override fun onDestroy() {
+    super.onDestroy()
+    ZegoUIKitPrebuiltCallService.unInit()
+}
+private fun permissionHandling(activityContext : FragmentActivity){
+    PermissionX.init(activityContext).permissions(permission.SYSTEM_ALERT_WINDOW)
+        .onExplanationRequestReason{ scope, deniedList ->
+            val message = "We need permission to call you"
+            scope.showRequestReasonDialog(deniedList,"PermissionX",message,"Allow","Deny")
+        }.request{ allGranted,grantedList,deniedList ->}
+}
 @Composable
 fun NavHostScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()

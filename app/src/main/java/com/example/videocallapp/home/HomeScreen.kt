@@ -17,6 +17,14 @@ import com.zegocloud.uikit.prebuilt.call.invite.ZegoSendCallInvitationButton
 
 @Composable
 fun HomeScreen(navController: NavController) {
+    val context = LocalContext.current as MainActivity
+    LaunchedEffect = Unit {
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.let{
+            context.initZegoInviteService(appID,appSign,it.email!!4,it.email!!)
+        }
+
+    }
     Column (modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally){
@@ -27,14 +35,33 @@ fun HomeScreen(navController: NavController) {
             label = { Text(text ="Add user email") },
             modifier = Modifier.fillMaxWidth()
         )
+        Row{
+            CallButton(isVideoCall = false){
+                button -> if(targetUserId.value.isNotEmpty())
+                    button.sendInvitees(mutableListOf(ZegoUIKitUser{targetUserId.value,targetUserId.value}))
+            }
+            CallButton(isVideoCall = true){
+                button -> if(targetUserId.value.isNotEmpty())   button.sendInvitees(
+                mutableListOf(
+                    ZegoUIKitUser(
+                        targetUserId.value, targetUserId.value
+                    )
+                )
+            )
+            }
+        }
     }
 }
 
 @Composable
-fun CallButton(isVideoCall:Boolean, onClick(ZegoSendCallInvitationButton)->Unit) {
-    AndroidView(factory = {conytext ->
+fun CallButton(isVideoCall:Boolean,onClick(ZegoSendCallInvitationButton)->Unit){
+    AndroidView(factory = { context ->
         val button = ZegoSendCallInvitationButton(context)
-        button.setIseVideoCall(isVideoCall)
-    })
+        button.setIsVideoCall(isVideoCall)
+        button.resourceID = "zego_data"
+        button
+    }){
+        zegoCallButton ->
+        zegoCallButton.setOn
+    }
 }
-
